@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Simple Node.JS Chat</title>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" />
+        <style>
+            header h1, h2, h3, h4 {
+                text-align: center;
+            }
+
+            footer p {
+                text-align: center;
+            }
+
+            .air {
+                width: 100%;
+                height: 200px;
+            }
+        </style>
+    </head>
+    <body>
+        <article class="container">
+            <header>
+                <h1>Simple Node.JS Chat</h1>
+            </header>
+
+            <div class="row">
+                <section class="col-md-6">
+                    <form id="chat">
+                        <p><input class="form-control" type="text" name="message" placeholder="Type your message..." /></p>
+                        <p class="text-center"><button class="btn btn-primary" type="submit">Send</button></p>
+                    </form>
+                </section>
+
+                <section class="col-md-6">
+                    <ul id="messages"></ul>
+                </section>
+            </div>
+        </article>
+
+        <script>
+            var chat = document.getElementById('chat');
+            var messages = document.getElementById('messages');
+
+            chat.onsubmit = function() {
+                var xhr = new XMLHttpRequest();
+
+                xhr.open("POST", "/publish", true);
+
+                xhr.send(JSON.stringify({message: this.elements.message.value}));
+
+                this.elements.message.value = '';
+
+                return false;
+            };
+
+            subscribe();
+
+            function subscribe() {
+                var xhr = new XMLHttpRequest();
+
+                xhr.open("GET", "/subscribe", true);
+
+                xhr.onload = function() {
+                    var li = document.createElement('li');
+                    li.textContent = this.responseText;
+                    messages.appendChild(li);
+
+                    subscribe();
+                };
+
+                xhr.onerror = xhr.onabort = function() {
+                    setTimeout(subscribe, 500);
+                };
+
+                xhr.send('');
+            }
+        </script>
+    </body>
+</html>
