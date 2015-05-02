@@ -1,8 +1,7 @@
 var http = require('http');
 var fs = require('fs');
 var log = require('winston');
-
-var chat = require('./chat');
+var chat = require('chat');
 
 http.createServer(function(req, res) {
 
