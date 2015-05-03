@@ -43,7 +43,7 @@ http.createServer(function(req, res) {
                 }
 
 
-                chat.publish(body.message);
+                chat.publish('- ' + body.message);
                 res.end('ok');
             });
             break;
